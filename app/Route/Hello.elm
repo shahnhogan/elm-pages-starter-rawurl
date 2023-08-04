@@ -71,6 +71,7 @@ subscriptions routeParams path shared model =
 
 type alias Data =
     { stars : Int
+    , rawUrl : String
     }
 
 
@@ -94,7 +95,7 @@ data routeParams request =
         }
         |> BackendTask.allowFatal
         |> BackendTask.map
-            (\stars -> Server.Response.render { stars = stars })
+            (\stars -> Server.Response.render { stars = stars, rawUrl = Server.Request.rawUrl request })
 
 
 head : App Data ActionData RouteParams -> List Head.Tag
@@ -108,7 +109,7 @@ view :
     -> Model
     -> View (PagesMsg Msg)
 view app shared model =
-    { title = "Hello", body = [ Html.text (String.fromInt app.data.stars) ] }
+    { title = "Hello", body = [ Html.text (String.fromInt app.data.stars), Html.p [] [ "Raw URL: " ++ app.data.rawUrl |> Html.text ] ] }
 
 
 action :
